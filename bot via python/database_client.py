@@ -14,7 +14,7 @@ def recreate_database() -> None:
             """
       CREATE TABLE IF NOT EXISTS telegram_updates 
         (
-          id INTEGER PRIMARY KEY
+          id INTEGER PRIMARY KEY,
           payload TEXT NOT NULL
         )
     """
@@ -32,4 +32,4 @@ def persist_updates(updates: list) -> None:
             "INSERT INTO telegram_updates (payload) VALUES (?)",
             data,
         )
-        connection.close()
+    connection.close()
