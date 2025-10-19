@@ -13,8 +13,11 @@ def makeRequest(method: str, **param) -> dict:
         method="POST",
         url=f"{os.getenv('TELEGRAM_BASE_URI')}/{method}",
         data=json_data,
-        headers={"Content-Type": "application/json"},
+        headers={
+            "Content-Type": "application/json",
+        },
     )
+
     with urllib.request.urlopen(request) as response:
         response_body = response.read().decode("utf-8")
         response_json = json.loads(response_body)
@@ -22,13 +25,26 @@ def makeRequest(method: str, **param) -> dict:
         return response_json["result"]
 
 
-def getUpdates(offset) -> dict:
-    return makeRequest("getUpdates", offset=offset)
+def getUpdates(**params) -> dict:
+    return makeRequest("getUpdates", **params)
 
 
-def sendMessage(chat_id: int, text: str) -> dict:
-    return makeRequest("sendMessage", chat_id=chat_id, text=text)
+def downloadFile(file_path: str) -> None:
+    url = f"{os.getenv('TELEGRAM_FILE_URI')}/{file_path}"
+    urllib.request.urlretrieve(url, file_path)
+
+
+def sendMessage(chat_id: int, text: str, **params) -> dict:
+    return makeRequest("sendMessage", chat_id=chat_id, text=text, **params)
 
 
 def getMe() -> dict:
     return makeRequest("getMe")
+
+
+def get_file(file_id: str) -> dict:
+    return makeRequest("getFile", file_id=file_id)
+
+
+def sendPhoto(chat_id: int, photo: str, **params) -> dict:
+    return makeRequest("sendPhoto", chat_id=chat_id, photo=photo, **params)
